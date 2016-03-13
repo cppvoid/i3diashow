@@ -16,6 +16,13 @@ void Pictures::changeDirectory(const std::string& directoryPath)
     searchInDirectory();
 }
 
+void Pictures::update()
+{
+	m_pictures.clear();
+
+	searchInDirectory();
+}
+
 void Pictures::searchInDirectory()
 {
     namespace fs = boost::filesystem;

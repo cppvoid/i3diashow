@@ -3,6 +3,7 @@
 #include <thread>
 #include <cstdlib>
 #include <random>
+#include <algorithm>
 
 Diashow::Diashow(const std::string& directoryPath, int seconds)
     : m_pictures(directoryPath), m_secondsToWait(seconds)
@@ -11,29 +12,35 @@ Diashow::Diashow(const std::string& directoryPath, int seconds)
 
 void Diashow::runAfterRow()
 {
-    do
+    for(;;)
     {
-        for(const auto& i : m_pictures.m_pictures) //hmm looks not really good :(
+        for(const auto& i : m_pictures)
         {
             changeWallpaper(i);
 
             std::this_thread::sleep_for(m_secondsToWait);
         }
-    }while(1);
+		m_pictures.update();
+    }
 }
 
 void Diashow::runRandom()
 {
-    do
-    {
-        std::random_device rd;
-        std::mt19937 mt(rd());
+	std::random_device rd;
+    std::mt19937 mt(rd());
 
-        std::uniform_int_distribution<int> dis(0, m_pictures.m_pictures.size() - 1);
-        changeWallpaper(m_pictures.m_pictures[dis(mt)]);
+	for(;;)
+	{
+		std::shuffle(m_pictures.begin(), m_pictures.end(), mt);
 
-        std::this_thread::sleep_for(m_secondsToWait);
-    }while(1);
+		for(const auto& i : m_pictures)
+		{
+			changeWallpaper(i);
+
+			std::this_thread::sleep_for(m_secondsToWait);
+		}
+		m_pictures.update();
+    }
 }
 
 void Diashow::changeWallpaper(const std::string& filePath)

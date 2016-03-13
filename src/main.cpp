@@ -61,8 +61,7 @@ int main(int argc, char** argv) try
 }
 catch(const std::exception& ex)
 {
-    std::cerr << "i3diashow: error catched in main( " << typeid(ex).name() << " )\n";
-    std::cerr << "what: " << ex.what() << "\n";
+    std::cerr << "i3diashow: " << ex.what() << "\n";
 }
 catch(...)
 {
