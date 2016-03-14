@@ -9,7 +9,7 @@ set(Boost_USE_STATIC_LIBS   ON)
 FIND_PACKAGE(Boost COMPONENTS program_options filesystem system REQUIRED)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 
-file(GLOB SOURCES "src/*.cpp" "inc/*.h")
+file(GLOB SOURCES "src/*.cpp" "src/*.c" "inc/*.h")
 INCLUDE_DIRECTORIES("inc")
 
 add_executable(${PROJECT_NAME} ${SOURCES})
