@@ -1,11 +1,14 @@
 #include "daemon.h"
 
-#include <stdlib.h>
-#include <unistd.h>
-#include <signal.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <unistd.h>
 #include <syslog.h>
+#include <string.h>
 
 int createDaemon()
 {
@@ -15,6 +18,7 @@ int createDaemon()
 
 	if(pid < 0)
 	{
+		exit(EXIT_FAILURE);
 		return -1;
 	}
 
@@ -25,16 +29,15 @@ int createDaemon()
 
 	if(setsid() < 0)
 	{
+		exit(EXIT_FAILURE);
 		return -1;
 	}
-
-    signal(SIGCHLD, SIG_IGN);
-	signal(SIGHUP, SIG_IGN);
 
 	pid = fork();
 
 	if(pid < 0)
 	{
+		exit(EXIT_FAILURE);
 		return -1;
 	}
 
@@ -44,15 +47,18 @@ int createDaemon()
 	}
 
 	umask(0);
-	chdir("/");
+
+	if((chdir("/")) < 0)
+	{
+		exit(EXIT_FAILURE);
+		return -1;
+	}
 
 	int x;
-	for (x = sysconf(_SC_OPEN_MAX); x>0; x--)
+	for (x = sysconf(_SC_OPEN_MAX); x > 0; x--)
 	{
 		close (x);
 	}
-
-	openlog("i3diashow", LOG_PID, LOG_DAEMON);
 
 	return 0;
 }

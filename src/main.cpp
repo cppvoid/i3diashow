@@ -11,6 +11,7 @@ extern "C"
 {
 	#include "daemon.h"
 	#include <syslog.h>
+	#include <sys/types.h>
 }
 
 #include <string>
@@ -42,7 +43,9 @@ int main(int argc, char** argv) try
         if(seconds <= 0)
         {
 			std::cerr << "i3diashow: seconds <= 0\n";
-        }
+
+			return -1;
+		}
     }
 
     if(vm.count("d"))
@@ -51,19 +54,26 @@ int main(int argc, char** argv) try
     }
     else
     {
-		std::cerr << ("i3diashow: -d is required\n");
-    }
+		std::cerr << "i3diashow: -d is required\n";
+
+		return -1;
+	}
 
     Diashow dia(directory, seconds);
 
-	if(!createDaemon())
+	if((createDaemon()) != 0)
 	{
+		openlog("i3diashow", LOG_PID, LOG_DAEMON);
 		syslog(LOG_CRIT, "error while creating daemon");
+		closelog();
 
-		return 1;
+		return -1;
 	}
 
-    if(vm.count("r"))
+	openlog("i3diashow", LOG_PID, LOG_DAEMON);
+	syslog(LOG_INFO, "daemon started");
+
+	if(vm.count("r"))
     {
         dia.runRandom();
     }
@@ -71,6 +81,8 @@ int main(int argc, char** argv) try
     {
         dia.runAfterRow();
     }
+
+	closelog();
 }
 catch(const std::exception& ex)
 {
