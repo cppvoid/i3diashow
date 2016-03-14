@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <random>
 #include <algorithm>
+#include <string>
 
 Diashow::Diashow(const std::string& directoryPath, int seconds)
     : m_pictures(directoryPath), m_secondsToWait(seconds)
@@ -48,6 +49,11 @@ void Diashow::changeWallpaper(const std::string& filePath)
     std::string cmd = "nitrogen --set-auto ";
     cmd += filePath;
 
-    std::system(cmd.c_str());
+    auto result = std::system(cmd.c_str());
+
+	if(result != 0)
+	{
+		throw std::runtime_error("nitrogen ended with exit code: " + std::to_string(result));
+	}
 }
 
