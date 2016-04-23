@@ -14,29 +14,47 @@ extern "C"
 	#include <sys/types.h>
 }
 
-#include <string>
-
 int main(int argc, char** argv) try
 {
-	boost::program_options::options_description description("i3diashow -s { update picture in seconds } -d { directory } -r { random }");
-
-    description.add_options()
-    ( "s", boost::program_options::value<int>() ,"update picture in seconds" )
-    ( "d", boost::program_options::value<std::string>() ,"directory" )
-    ( "r", "random");
-
+	boost::program_options::options_description description("Allowed options");
     boost::program_options::variables_map vm;
-    boost::program_options::store( boost::program_options::command_line_parser( argc, argv )
-                                   .options(description )
-                                   .style( boost::program_options::command_line_style::unix_style
-                                         | boost::program_options::command_line_style::allow_long_disguise ).run(), vm );
 
-    boost::program_options::notify( vm );
+	try
+	{
+		description.add_options()
+		("help, h", "print usage message")
+		("seconds, s", boost::program_options::value<int>() ,"update duration")
+		("directory, d", boost::program_options::value<std::string>()->required() ,"directory")
+		("random, r", "random");
+
+		boost::program_options::store(boost::program_options::command_line_parser(argc, argv)
+									.options(description)
+									.style(
+											boost::program_options::command_line_style::unix_style |
+											boost::program_options::command_line_style::allow_long_disguise)
+									.run(),
+									vm);
+
+		boost::program_options::notify(vm);
+	}
+	catch(const std::exception& ex)
+	{
+		std::cout << "i3diashow: " << ex.what() << std::endl;
+
+		return -1;
+	}
 
     int seconds = 10;
     std::string directory;
 
-    if(vm.count("s"))
+	if(vm.count("help"))
+	{
+		std::cout << description << "\n";
+
+		return 0;
+	}
+
+    if(vm.count("seconds"))
     {
         seconds = vm["s"].as<int>();
 
@@ -48,7 +66,7 @@ int main(int argc, char** argv) try
 		}
     }
 
-    if(vm.count("d"))
+    if(vm.count("directory"))
     {
         directory = vm["d"].as<std::string>();
     }
