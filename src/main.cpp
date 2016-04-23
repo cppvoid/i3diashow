@@ -23,8 +23,8 @@ int main(int argc, char** argv) try
 	{
 		description.add_options()
 		("help, h", "print usage message")
-		("seconds, s", boost::program_options::value<int>() ,"update duration")
-		("directory, d", boost::program_options::value<std::string>()->required() ,"directory")
+		("seconds, s", boost::program_options::value<int>(), "update duration")
+		("directory, d", boost::program_options::value<std::string>(), "directory")
 		("random, r", "random");
 
 		boost::program_options::store(boost::program_options::command_line_parser(argc, argv)
@@ -56,7 +56,7 @@ int main(int argc, char** argv) try
 
     if(vm.count("seconds"))
     {
-        seconds = vm["s"].as<int>();
+        seconds = vm["seconds"].as<int>();
 
         if(seconds <= 0)
         {
@@ -68,7 +68,7 @@ int main(int argc, char** argv) try
 
     if(vm.count("directory"))
     {
-        directory = vm["d"].as<std::string>();
+        directory = vm["directory"].as<std::string>();
     }
     else
     {
@@ -91,7 +91,7 @@ int main(int argc, char** argv) try
 	openlog("i3diashow", LOG_PID, LOG_DAEMON);
 	syslog(LOG_INFO, "daemon started");
 
-	if(vm.count("r"))
+	if(vm.count("random"))
     {
         dia.runRandom();
     }
