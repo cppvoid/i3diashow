@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <string>
 
-Diashow::Diashow(const std::string& directoryPath, int seconds)
+Diashow::Diashow(const std::string& directoryPath, int32_t seconds)
     : m_pictures(directoryPath), m_secondsToWait(seconds)
 {
 }

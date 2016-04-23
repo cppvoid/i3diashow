@@ -4,6 +4,7 @@
 #include <typeinfo>
 #include <stdexcept>
 #include <string>
+#include <cstdint>
 
 #include "diashow.h"
 
@@ -23,7 +24,7 @@ int main(int argc, char** argv) try
 	{
 		description.add_options()
 		("help, h", "print usage message")
-		("seconds, s", boost::program_options::value<int>(), "update duration")
+		("seconds, s", boost::program_options::value<int32_t>(), "update duration")
 		("directory, d", boost::program_options::value<std::string>(), "directory")
 		("random, r", "random");
 
@@ -44,7 +45,7 @@ int main(int argc, char** argv) try
 		return -1;
 	}
 
-    int seconds = 10;
+    int32_t seconds = 10;
     std::string directory;
 
 	if(vm.count("help"))
@@ -109,7 +110,7 @@ catch(const std::exception& ex)
 }
 catch(...)
 {
-	syslog(LOG_CRIT, "unknown error");
+	syslog(LOG_CRIT, "unknow error");
 	closelog();
 }
 

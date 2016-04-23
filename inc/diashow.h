@@ -5,11 +5,12 @@
 
 #include <string>
 #include <chrono>
+#include <cstdint>
 
 class Diashow
 {
 public:
-    explicit Diashow(const std::string& directoryPath, int seconds);
+    explicit Diashow(const std::string& directoryPath, int32_t seconds);
 
     void runAfterRow();
 
