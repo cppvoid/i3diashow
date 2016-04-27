@@ -7,12 +7,13 @@
 #include <cstdint>
 
 #include "diashow.h"
+#include "single_instance.h"
 
 extern "C"
 {
-	#include "daemon.h"
-	#include <syslog.h>
-	#include <sys/types.h>
+#include "daemon.h"
+#include <syslog.h>
+#include <sys/types.h>
 }
 
 int main(int argc, char** argv) try
